@@ -1,1 +1,0 @@
-print('viernes 5/4')
