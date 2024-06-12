@@ -1,0 +1,11 @@
+
+
+jedis = [ "Obi-Wan Kenobi","Anakin Skywalker/Darth Vader","Quinlan Vos","Qui-Gon Jinn"]
+
+def invertir_jedis (jedis):
+    if len(jedis)== 0 :
+        return jedis
+    else:
+        return [jedis [-1]] + invertir_jedis (jedis[:-1])
+    
+print(invertir_jedis((jedis)))
