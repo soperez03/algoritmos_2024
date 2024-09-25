@@ -1,0 +1,93 @@
+'''
+24. Dada una pila de personajes de Marvel Cinematic Universe (MCU), 
+de los cuales se dispone de su nombre y la cantidad de películas 
+de la saga en la que participó, implementar las funciones
+necesarias para resolver las siguientes actividades:
+
+a. determinar en qué posición se encuentran Rocket Raccoon y Groot,
+ tomando como posición uno la cima de la pila;
+
+[86]
+
+b. determinar los personajes que participaron en más de 5 películas
+ de la saga, además indi-car la cantidad de películas en la que aparece;
+
+c. determinar en cuantas películas participo la Viuda Negra (Black Widow);
+d. mostrar todos los personajes cuyos nombre empiezan con C, D y G.'''
+
+personajes = [
+    ("Tony Stark / Iron Man", 10),
+    ("Steve Rogers / Captain America", 9),
+    ("Thor", 9),
+    ("Natasha Romanoff / Black Widow", 8),
+    ("Bruce Banner / Hulk", 7),
+    ("Clint Barton / Hawkeye", 6),
+    ("James 'Rhodey' Rhodes / War Machine", 7),
+    ("Nick Fury", 11),
+    ("Loki", 6),
+    ("Wanda Maximoff / Scarlet Witch", 6),
+    ("Vision", 5),
+    ("Peter Parker / Spider-Man", 6),
+    ("Scott Lang / Ant-Man", 5),
+    ("T'Challa / Black Panther", 4),
+    ("Stephen Strange / Doctor Strange", 5),
+    ("Sam Wilson / Falcon", 6),
+    ("Bucky Barnes / Winter Soldier", 6),
+    ("Carol Danvers / Captain Marvel", 3),
+    ("Hope van Dyne / Wasp", 3),
+    ("Peter Quill / Star-Lord", 4),
+    ("Gamora", 4),
+    ("Drax the Destroyer", 4),
+    ("Rocket Raccoon", 4),
+    ("Groot", 4),
+    ("Nebula", 5)
+]
+''' punto a
+def posicion(personajes,search):
+    i=0
+    for personaje in personajes:
+        if personaje[0] == search:
+           return  i + 1
+        i+=1
+    return False
+search= 'Rocket Raccoon' #se cambia para rocket y cumple con a- :)
+searchpos=posicion(personajes,search)
+print(f'la posicion del personaje {search} es { searchpos} ')
+'''
+''' punto b 
+def cantidad(personajes):
+    mas5=[]
+    for personaje in personajes:
+        if personaje[1] > 5:
+            mas5.append(personaje[0])
+    print(f'la cantidad de pelicula en la que aparece el personaje {personajes[0]} es {personajes[1]}')
+    return mas5
+
+puntob=cantidad(personajes)
+print(f'la cantidad de personajes que aparecen en mas de 5 peliculas son: {puntob}')
+'''
+'''punto c
+
+def viudaN(personajes,searchviu):
+    a = False
+    for personaje in personajes:
+        if personaje[0] == searchviu:        
+         return print(f'la {searchviu} participo en {personaje[1]} peliculas')
+
+searchviu = 'Natasha Romanoff / Black Widow'
+blackWidow= viudaN(personajes,searchviu)
+print(f'{blackWidow}')
+'''
+
+'''punto d'''
+def startwithD(personajes):
+    startD =[]
+    for personaje in personajes:
+        if personaje[0].startswith('G'): #Se cambia  * C / D y cumple con el punto d :)
+            startD.append(personaje[0])
+    return startD
+
+empiezacon=startwithD(personajes)
+print(f' los personajes que empiezan con D son {empiezacon}')
+
+
