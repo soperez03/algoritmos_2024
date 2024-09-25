@@ -1,1 +1,0 @@
-# algoritmos_2024
