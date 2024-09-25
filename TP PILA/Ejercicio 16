@@ -1,0 +1,20 @@
+from pila import Stack
+epi5= Stack()
+epi7=Stack()
+
+epi5 = ['Luke Skywalker', 'Han Solo', 'Princesa Leia','Obi Wan Kenobi','C3PO','R2D2','Chewbacca','Darth Vader','Emperador Palpatine','Yoda','Lando','Capitan Lennox']
+epi7 = ['Rey','Finn','Poe Dameron','Kylo Ren','Han Solo','Princesa Leia','Chewbacca','BB-8','General Hux']
+print('arranca')
+print(f'los personajes del Episodio V: {epi5}')
+print()
+print(f'los personajes del Episodio VII: {epi7}')
+print('entra a la def')
+def interseccion (epi5,epi7):
+    coinciden=[]
+    for personaje in epi5:
+        if personaje in epi7:
+            coinciden.append(personaje)
+    return coinciden
+intersectan = interseccion(epi5,epi7)
+print()
+print(f' la interseccion se da con los siguientes personajes: {intersectan} ')
