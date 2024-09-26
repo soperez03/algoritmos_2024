@@ -1,0 +1,94 @@
+'''Escribir un algoritmo que permita utilizar tres tablas hash para guardar los datos de Pokémons,
+que contemple las siguientes actividades: 
+
+a. en la primera tabla hash la función hash debe ser sobre el tipo de Pokémon, en la segunda
+tabla la función hash deberá utilizar el ultimo dígito del número del Pokémon como clave y
+ la tercera sera en base  a su nivel repartiéndolos en 10 posiciones dentro de la tabla; 
+
+b. debe utilizar tablas hash abiertas con listas como estructura secundaria;
+c. si el Pokémon es de más de un tipo deberá cargarlo en cada uno de las tabla que indiquen estos tipos;
+d. deberá permitir cargar Pokémons de los cuales se dispone de su número, nombre, tipo/s, nivel.
+e. mostrar todos los Pokémons cuyos numeros terminan en 3, 7 y 9;
+f. mostrar todos los Pokémons cuyos niveles son multiplos de 2, 5 y 10;
+g. mostrar todos los Pokémons de los siguientes tipo: Acero, Fuego, Electrifico, Hielo'''
+pokemones = [
+    {"nombre": "Bulbasaur", "numero": 1, "nivel": 5, "tipo": ["Planta", "Veneno"]},
+    {"nombre": "Charmander", "numero": 4, "nivel": 5, "tipo": ["Fuego"]},
+    {"nombre": "Squirtle", "numero": 7, "nivel": 5, "tipo": ["Agua"]},
+    {"nombre": "Pidgey", "numero": 16, "nivel": 5, "tipo": ["Normal", "Volador"]},
+    {"nombre": "Rattata", "numero": 19, "nivel": 5, "tipo": ["Normal"]},
+    {"nombre": "Jigglypuff", "numero": 39, "nivel": 5, "tipo": ["Normal", "Hada"]},
+    {"nombre": "Psyduck", "numero": 54, "nivel": 5, "tipo": ["Agua"]},
+    {"nombre": "Machop", "numero": 66, "nivel": 5, "tipo": ["Lucha"]},
+    {"nombre": "Magnemite", "numero": 81, "nivel": 5, "tipo": ["Eléctrico", "Acero"]},
+    {"nombre": "Eevee", "numero": 133, "nivel": 5, "tipo": ["Normal"]},
+]
+
+'''a'''
+def hash_type(pokemon):
+    return pokemon['tipo']
+def hash_num(pokemon):
+    return str (pokemon['numero'])[-1]
+def hash_level(pokemon):
+    return pokemon['nivel']
+'''b'''
+type_table={}
+num_table={}
+level_table={}
+
+'''c and d
+def add(pokemon):
+    for type in pokemon['tipo']:
+        if type not in type_table:
+            type_table[type]=[]
+    type_table[type].append(pokemon)
+
+    num=hash_num(pokemon)
+    if num not  in num_table:
+        num_table[num]=[]
+    num_table[num].append(pokemon)
+    
+    level=hash_level(pokemon)
+    if level not in level_table:
+        level_table[level]=[]
+    level_table[level].append(pokemon)
+for pokemon in pokemones:
+    add(pokemon)'''
+
+'''e
+def numerosP():
+    numDis = [3,7,9]
+    term = []
+    for num in num_table:
+        if (num % 10) in numDis:
+            pokemones=num_table[num]
+            term.append(pokemones['nombre'])
+    return term
+n = numerosP()
+print(f'los pokemones que terminan en los nros son: {n}')'''
+
+'''f
+def level(pokemones):
+    level_s= [2,5,10]
+    multiplos=[]
+    for pokemon['nivel'] in level_table:
+        if (nivel % level_s) == 0 :
+            multiplos.append(pokemon['nombre'])
+    return multiplos
+m=level(pokemones)
+print(f'los pokemones q cumplen con el punto d son {m}')
+'''
+
+'''g'''
+def tipos(tipo):
+    for tipo in tip:
+        if tipo in type_table:
+            pokemones = type_table[tipo]
+            if pokemones:
+                print(f'pokemones de tipo {tipo}')
+                print(pokemon)
+
+
+numerosP()
+ttipos=['fuego','acero','electrico','hielo']
+tipos(ttipos)
