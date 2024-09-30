@@ -1,0 +1,105 @@
+'''11. Dada una cola con personajes de la saga Star Wars, de los cuales se conoce su nombre y planeta
+de origen. Desarrollar las funciones necesarias para resolver las siguientes actividades:
+a. mostrar los personajes del planeta Alderaan, 
+Endor y Tatooine
+b. indicar el plantea natal de Luke Skywalker 
+y Han Solo
+c. insertar un nuevo personaje antes del 
+maestro Yoda
+d. eliminar el personaje ubicado
+ después de Jar Jar Binks'''
+
+class Queue:
+    
+    def __init__(self):
+        self.__elements = []
+
+    def arrive(self, element):
+        self.__elements.append(element)
+
+    def attention(self):
+        if len(self.__elements) > 0:
+            return self.__elements.pop(0)
+        else:
+            return None
+    
+    def size(self):
+        return len(self.__elements)
+
+    def on_front(self):
+        if len(self.__elements) > 0:
+            return self.__elements[0]
+        else:
+            return None
+    
+    def move_to_end(self):
+        element = self.attention()
+        if element is not None:
+            self.arrive(element)
+
+personajes = [
+    ("Luke Skywalker", "Tatooine"),
+    ("Leia Organa", "Alderaan"),
+    ("Darth Vader", "Tatooine"),
+    ("Yoda", "Dagobah"),
+    ("Obi-Wan Kenobi", "Stewjon"),
+    ("Han Solo", "Corellia"),
+    ("Lando Calrissian", "Socorro"),
+    ("Qui-Gon Jinn", "Coruscant"),
+    ("Ahsoka Tano", "Shili"),
+    ("Boba Fett", "Kamino"),
+   
+    ("Jar Jar Binks", "Naboo"), ("Jango Fett", "Kamino"),  
+]
+
+'''a
+def planetaNata(personajes):
+    planet=['Alderaan','Endor','Tatooine']
+    printPlanet=Queue()
+    for personaje in personajes:
+        if personaje[1]  in planet:
+            printPlanet.arrive(personaje[0])
+    return printPlanet
+a=planetaNata(personajes)
+pers=[]
+while a.size()>0:
+    pers.append(a)
+print(f'los personajes que cumplen con la cond del punto a son {pers}')
+ '''
+'''b
+def planet_b(personajes,search):
+    origen=[]
+    for personaje in personajes:
+        if search in personaje:
+           origen.append(personaje[1])
+    return origen
+search = 'Luke Skywalker'   #si cambiamos el search a Han solo cumple con el b :)
+b=planet_b(personajes,search)
+print(f'el planeta natal de  {search} es {b} ')'''
+'''c
+
+
+def insert(personajes, new):
+    antesYoda= ("Yoda", "Dagobah")
+    new_cola=[]
+    for personaje in personajes:
+        new_cola.append(personaje)
+        if personaje == antesYoda:
+            new_cola.append(new)
+    return new_cola
+
+nombre=str(input('nombre: '))
+natal= str(input('pais natal: '))
+new=()
+new=(nombre,natal)
+print (new)
+c=insert(personajes, new)
+print(c)'''
+
+'''d'''
+janjan= ("Jar Jar Binks", "Naboo")
+if janjan in personajes:
+    inde=personajes.index(janjan)
+    if inde + 1 < len(personajes):
+        personajes.pop(inde + 1)
+print(personajes)
