@@ -1,0 +1,122 @@
+'''22. Se tienen una cola con personajes de Marvel Cinematic Universe (MCU), de los cuales se cono-
+ce el nombre del personaje, el nombre del superhéroe y su género (Masculino M y Femenino
+
+F) –por ejemplo {Tony Stark, Iron Man, M}, {Steve Rogers, Capitán América, M}, {Natasha Ro-
+manoff, Black Widow, F}, etc., desarrollar un algoritmo que resuelva las siguientes actividades:
+
+a. determinar el nombre del personaje de la superhéroe Capitana Marvel;
+b. mostrar los nombre de los superhéroes femeninos;
+c. mostrar los nombres de los personajes masculinos;
+d. determinar el nombre del superhéroe del personaje Scott Lang;
+e. mostrar todos datos de los superhéroes o personaje cuyos nombres comienzan
+con la letra S;
+f. determinar si el personaje Carol Danvers se encuentra en la cola e indicar su nombre
+de superhéroes.'''
+class Queue:
+    
+    def __init__(self):
+        self.__elements = []
+
+    def arrive(self, element):
+        self.__elements.append(element)
+
+    def attention(self):
+        if len(self.__elements) > 0:
+            return self.__elements.pop(0)
+        else:
+            return None
+    
+    def size(self):
+        return len(self.__elements)
+
+    def on_front(self):
+        if len(self.__elements) > 0:
+            return self.__elements[0]
+        else:
+            return None
+    
+    def move_to_end(self):
+        element = self.attention()
+        if element is not None:
+            self.arrive(element)
+
+personajes = [
+    ("Tony Stark", "Iron Man", "M"),
+    ("Steve Rogers", "Capitán América", "M"),
+    ("Natasha Romanoff", "Black Widow", "F"),
+    ("Thor", "Thor", "M"),
+    ("Carol Danvers", "Capitana Marvel", "F"),
+    ("Bruce Banner", "Hulk", "M"),
+    ("Wanda Maximoff", "Scarlet Witch", "F"),
+    ("Peter Parker", "Spider-Man", "M"),
+    ("Doctor Strange", "Doctor Strange", "M"),
+    ("T'Challa", "Black Panther", "M"),
+    ("Scott Lang", "Ant-Man", "M")
+]
+'''a
+search= 'Capitana Marvel'
+for personaje in personajes:
+    if personaje[1] == search: 
+        print (f'el nombre de {search} es {personaje[0]}')'''
+'''b
+def fem(personajes):
+    sex = 'F'
+    esFem = Queue()
+    for personaje in personajes:
+        if personaje[2] == sex:
+            esFem.arrive(personaje[1])
+    return esFem
+femen=[]
+b=fem(personajes)
+while b.size() > 0:
+    femen.append(b.attention())
+print (f'los personajes {femen} son femeninos')'''
+'''c
+def masc(personajes):
+    sex = 'M'
+    esMasc = Queue()
+    for personaje in personajes:
+        if personaje[2] == sex:
+            esMasc.arrive(personaje[1])
+    return esMasc
+
+c=masc(personajes)
+masculino=[]
+while c.size()  > 0:
+    masculino.append(c.attention())
+print (f'los personajes {masculino} son masculinos')'''
+'''d
+def determina_name(personajes):
+    det= 'Scott Lang'
+    name=Queue()
+    for personaje in personajes:
+        if personaje[0] == det: 
+            name.arrive(personaje[1])
+    return name
+d=determina_name(personajes)
+name_p=[]
+while d.size() > 0:
+    name_p.append(d.attention())
+print (f'el nombre es {name_p}')'''
+'''e
+
+def startcon(personajes):
+    empiezacon=Queue()
+    for personaje in personajes:
+        if personaje[1].startswith('S'):
+            empiezacon.arrive(personaje)
+    return empiezacon
+e=startcon(personajes)
+startc=[]
+while e.size() > 0:
+    startc.append(e.attention())
+print (f'el nombre es {startc}')'''
+carol="Carol Danvers"
+namecaro=Queue()
+for personaje in personajes:
+    if  personaje[0] == carol:
+        namecaro.arrive(personaje[1])
+aux=[]
+while namecaro.size() > 0:
+    aux.append(namecaro.attention())
+print (f'el nombre es {aux}')
