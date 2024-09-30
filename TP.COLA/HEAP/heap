@@ -1,0 +1,27 @@
+
+
+'''Dada una lista de números enteros, implementar un algoritmo para
+ dividir dicha lista en dos,
+una que contenga los números pares y otra para los números impares.'''
+elements=[34,56,21,22,5,4,3]
+
+from heap import HeapMax,HeapMin 
+def pares(elements):
+    heap_pares=HeapMax()
+    for element in elements:
+        if element % 2 == 0:
+            heap_pares.add(element)
+    return heap_pares.sort()
+def impares(elements):
+    heap_impares= HeapMin()  
+    for element in elements:
+        if element % 2 != 0:
+            heap_impares.add(element)
+    return heap_impares.sort()
+
+Pares=pares(elements)
+Impares=impares(elements)
+print(elements)
+print(f'Los elementos pares, {Pares}')
+print()
+print(f'los impares: {Impares}')
