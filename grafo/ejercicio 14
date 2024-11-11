@@ -1,0 +1,303 @@
+'''14. Implementar sobre un grafo no dirigido los algoritmos necesario para dar solución a las si-
+guientes tareas:
+
+a. cada vértice representar un ambiente de una casa: cocina, comedor, cochera, quincho,
+baño 1, baño 2, habitación 1, habitación 2, sala de estar, terraza, patio;
+
+b. cargar al menos tres aristas a cada vértice, y a dos de estas cárguele cinco, el peso de la aris-
+ta es la distancia entre los ambientes, se debe cargar en metros;
+
+c. obtener el árbol de expansión mínima y determine cuantos metros de cables se necesitan
+para conectar todos los ambientes;
+d. determinar cuál es el camino más corto desde la habitación 1 hasta la sala de estar para
+determinar cuántos metros de cable de red se necesitan para conectar el router con el
+Smart Tv.'''
+
+
+from cola import Queue
+from heap import HeapMin
+from pila import Stack
+
+class Graph:
+    def __init__(self, dirigido=True):
+        self.elements = []
+        self.dirigido = dirigido
+
+    def show_graph(self):
+        print()
+        print("nodos")
+        for index, nodo in enumerate(self.elements):
+            print(nodo['value'])
+            print(f"    aristas")
+            for second_index, second_element in enumerate(nodo['aristas']):
+                print(f'    destino {second_element['value']} peso: {second_element['peso']}')
+        print()
+
+    def search(self, value):
+        for index, element in enumerate(self.elements):
+            if element['value'] == value:
+                return index
+
+    def search_arista(self, vertice_value, value):
+        pos_origen = self.search(vertice_value)
+        if pos_origen is not None:
+            for index, element in enumerate(self.elements[pos_origen]['aristas']):
+                if element['value'] == value:
+                    return pos_origen, index
+
+    def insert_vertice(self, value, other_value=None):
+        nodo = {
+        'value': value,
+        'aristas': [],
+        'visitado': False,
+        }
+        self.elements.append(nodo)
+
+    def insert_arista(self, origen, destino, peso):
+        pos_origen = self.search(origen)
+        pos_destino = self.search(destino)
+        if pos_origen is not None and pos_destino is not None:
+            # print(origen, destino)
+            arista = {
+                'value': destino,
+                'peso': peso
+            }
+            self.elements[pos_origen]['aristas'].append(arista)
+            if not self.dirigido:
+                arista = {
+                    'value': origen,
+                    'peso': peso
+                }
+                self.elements[pos_destino]['aristas'].append(arista)
+
+    
+    def delete_arista(self, origen, destino):
+        result = self.search_arista(origen, destino)
+        if result:
+            pos_vertice, pos_arista = result
+            value = self.elements[pos_vertice]['aristas'].pop(pos_arista)
+            if not self.dirigido:
+                result = self.search_arista(destino, origen)
+                if result:
+                    pos_vertice, pos_arista = result
+                    self.elements[pos_vertice]['aristas'].pop(pos_arista)
+            return value
+    
+    def delete_vertice(self, value):
+        pos_vertice = self.search(value)
+        if pos_vertice is not None:
+            delete_value = self.elements.pop(pos_vertice)
+            for nodo in self.elements:
+                self.delete_arista(nodo['value'], value)
+            return delete_value
+    
+    def mark_as_not_visited(self):
+        for nodo in self.elements:
+            nodo['visitado'] = False
+
+    def deep_show(self, origin):
+        def __deep_show(graph, origin):
+            pos_vertice = graph.search(origin)
+            if pos_vertice is not None:
+                if not graph.elements[pos_vertice]['visitado']:
+                    graph.elements[pos_vertice]['visitado'] = True
+                    print(graph.elements[pos_vertice]['value'])
+                    adyacentes = graph.elements[pos_vertice]['aristas']
+                    for adyacente in adyacentes:
+                        __deep_show(graph, adyacente['value'])
+        
+        self.mark_as_not_visited()
+        __deep_show(self, origin)
+
+    def amplitude_show(self, origin):
+        self.mark_as_not_visited()
+        cola = Queue()
+        pos_vertice = self.search(origin)
+        if pos_vertice is not None:
+            if not self.elements[pos_vertice]['visitado']:
+                cola.arrive(self.elements[pos_vertice])
+                while cola.size() > 0:
+                    nodo = cola.attention()
+                    nodo['visitado'] = True
+                    print(nodo['value'])
+                    adyacentes = nodo['aristas']
+                    for adyacente in adyacentes:
+                        pos_adyaecnte = self.search(adyacente['value'])
+                        if not self.elements[pos_adyaecnte]['visitado']:
+                            cola.arrive(self.elements[pos_adyaecnte])
+    
+    def exist_path(self, origen, destino):
+        def __exist_path(graph, origin, destino):
+            result = False
+            pos_vertice = graph.search(origin)
+            if pos_vertice is not None:
+                if not graph.elements[pos_vertice]['visitado']:
+                    graph.elements[pos_vertice]['visitado'] = True
+                    if graph.elements[pos_vertice]['value'] == destino:
+                        return True
+                    else:
+                        adyacentes = graph.elements[pos_vertice]['aristas']
+                        for adyacente in adyacentes:
+                            result = __exist_path(graph, adyacente['value'], destino)
+                            if result:
+                                break
+            return result
+        
+        self.mark_as_not_visited()
+        result = __exist_path(self, origen, destino)
+        return result
+
+    def dijkstra(self, origen):
+        from math import inf
+        no_visitados = HeapMin()
+        camino = Stack()
+        for nodo in self.elements:
+            distancia = 0 if nodo['value'] == origen else inf
+            no_visitados.arrive([nodo['value'], nodo, None], distancia)
+        while len(no_visitados.elements) > 0:
+            node = no_visitados.atention()
+            costo_nodo_actual = node[0]
+            camino.push(node)
+            adjacentes = node[1][1]['aristas']
+            # print(costo_nodo_actual, adjacentes)
+            for adjacente in adjacentes:
+                pos = no_visitados.search(adjacente['value'])
+                if pos is not None:
+                    if costo_nodo_actual + adjacente['peso'] < no_visitados.elements[pos][0]:
+                        no_visitados.elements[pos][1][2] = node[1][0]
+                        no_visitados.change_proirity(pos, costo_nodo_actual + adjacente['peso'])
+        return camino
+
+    def kruskal(self, origen):
+        def buscar_en_bosque(bosque, buscado):
+            for index, arbol in enumerate(bosque):
+                # print(buscado, arbol)
+                if buscado in arbol:
+                    return index
+
+        bosque = []
+        aristas = HeapMin()
+        for nodo in self.elements:
+            bosque.append(nodo['value'])
+            adjacentes = nodo['aristas']
+            for adjacente in adjacentes:
+                aristas.arrive([nodo['value'], adjacente['value']], adjacente['peso'])
+
+        # print(aristas.elements)
+        while len(bosque) > 1 and len(aristas.elements) > 0:
+            arista = aristas.atention()
+            # print(bosque)
+            # print(arista[1][0], arista[1][1])
+            # print(arista)
+            origen = buscar_en_bosque(bosque, arista[1][0])
+            destino = buscar_en_bosque(bosque, arista[1][1])
+            # print(origen, destino)
+            if origen is not None and destino is not None:
+                if origen != destino:
+                    if origen > destino:
+                        vertice_ori = bosque.pop(origen)
+                        vertice_des = bosque.pop(destino)
+                    else:
+                        vertice_des = bosque.pop(destino)
+                        vertice_ori = bosque.pop(origen)
+
+                    if '-' not in vertice_ori and '-' not in vertice_des:
+                        bosque.append(f'{vertice_ori}-{vertice_des}-{arista[0]}')
+                    elif '-' not in vertice_des:
+                        bosque.append(vertice_ori+';'+f'{arista[1][0]}-{vertice_des}-{arista[0]}')
+                    elif '-' not in vertice_ori:
+                        bosque.append(vertice_des+';'+f'{vertice_ori}-{arista[1][1]}-{arista[0]}')
+                    else:
+                        bosque.append(vertice_ori+';'+vertice_des+';'+f'{arista[1][0]}-{arista[1][1]}-{arista[0]}')
+        return bosque
+'''
+a. cada vértice representar un ambiente de una casa: cocina, comedor, cochera, quincho,
+baño 1, baño 2, habitación 1, habitación 2, sala de estar, terraza, patio;
+
+b. cargar al menos tres aristas a cada vértice, y a dos de estas cárguele cinco,
+ el peso de la arista es la distancia entre los ambientes, se debe cargar en metros;
+
+'''
+grafo = Graph(dirigido=False)
+
+ambientes= [ 'cocina', 'comedor','cochera','quincho','baño 1','baño 2',
+            'habitacion 1','habitacion 2','sala de estar','terraza','patio']
+for lugar in ambientes:
+    nodo= {
+        'value': lugar,
+        'aristas' : []
+    }
+    grafo.insert_vertice(lugar)
+
+'''b'''
+grafo.insert_arista('cocina', 'comedor', 2)
+grafo.insert_arista('cocina', 'cochera', 6)
+grafo.insert_arista('cocina', 'quincho', 8)
+grafo.insert_arista('comedor', 'cocina', 2)
+grafo.insert_arista('comedor', 'quincho', 5)
+grafo.insert_arista('comedor', 'baño 1', 4)
+grafo.insert_arista('cochera', 'cocina', 6)
+grafo.insert_arista('cochera', 'baño 2', 10)
+grafo.insert_arista('cochera', 'habitacion 1', 12)
+grafo.insert_arista('quincho', 'cocina', 8)
+grafo.insert_arista('quincho', 'comedor', 5)
+grafo.insert_arista('quincho', 'habitacion 1', 14)
+grafo.insert_arista('baño 1', 'comedor', 4)
+grafo.insert_arista('baño 1', 'patio', 3)
+grafo.insert_arista('baño 1', 'sala de estar', 6)
+grafo.insert_arista('baño 2', 'comedor', 9)
+grafo.insert_arista('baño 2', 'cochera', 10)
+grafo.insert_arista('baño 2', 'patio', 4)
+grafo.insert_arista('baño 2', 'sala de estar', 2)
+grafo.insert_arista('baño 2', 'habitacion 2', 6)
+grafo.insert_arista('habitacion 1', 'cochera', 12)
+grafo.insert_arista('habitacion 1', 'quincho', 14)
+grafo.insert_arista('habitacion 1', 'habitacion 2', 3)
+grafo.insert_arista('habitacion 2', 'sala de estar', 4)
+grafo.insert_arista('habitacion 2', 'habitacion 1', 3)
+grafo.insert_arista('habitacion 2', 'terraza', 5)
+grafo.insert_arista('sala de estar', 'baño 1', 6)
+grafo.insert_arista('sala de estar', 'quincho', 7)
+grafo.insert_arista('sala de estar', 'habitacion 2', 4)
+grafo.insert_arista('sala de estar', 'terraza', 10)
+grafo.insert_arista('sala de estar', 'baño', 2)
+grafo.insert_arista('terraza', 'baño 1', 7)
+grafo.insert_arista('terraza', 'baño 2', 8)
+grafo.insert_arista('terraza', 'habitacion 2', 5)
+grafo.insert_arista('patio', 'baño 1', 3)
+grafo.insert_arista('patio', 'baño 2', 4)
+grafo.insert_arista('patio', 'habitacion 1', 9)
+
+'''c. obtener el árbol de expansión mínima y determine cuantos metros de cables se 
+necesitan para conectar todos los ambientes;'''
+
+
+expansionMinima = grafo.kruskal('cocina')
+
+print(f'el arbol de expansion minima es {expansionMinima}')
+print()
+metrosCable = 0
+for arista in expansionMinima[0].split(';'):
+    origen, destino, peso = arista.split('-')
+    print(f"origen: {origen} -> destino: {destino} peso: {peso}")
+    metrosCable += int(peso) 
+print()
+print(f'se necesitan {metrosCable} metros de cable')
+print()
+''' d. determinar cuál es el camino más corto desde la habitación 1 hasta
+ la sala de estar para determinar cuántos metros de cable de
+   red se necesitan para conectar el router con elSmart Tv.'''
+
+grafoCorto = grafo.dijkstra('habitacion 1')
+destinoGrafo = 'sala de estar'
+peso_total = None
+camino_completo = []
+while grafoCorto.size() > 0:
+    value = grafoCorto.pop()
+    if value[1][0] == destino:
+        if peso_total is None:
+             peso_total = value[0]
+        camino_completo.append(value[1][0])
+        destino = value[1][2]
+camino_completo.reverse()
+print(f'el camino mas corto es: {'-'.join(camino_completo)} y se necesitaran {peso_total} metros de cable')
